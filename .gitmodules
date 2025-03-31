@@ -7,3 +7,6 @@
 [submodule "coducate-backend"]
 	path = coducate-backend
 	url = git@github.com:madbeamer/coducate-backend.git
+[submodule "coducate-gifs"]
+	path = coducate-gifs
+	url = git@github.com:madbeamer/coducate-gifs.git
