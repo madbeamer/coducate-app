@@ -1,0 +1,9 @@
+[submodule "coducate"]
+	path = coducate
+	url = git@github.com:madbeamer/coducate.git
+[submodule "coducate-frontend"]
+	path = coducate-frontend
+	url = git@github.com:madbeamer/coducate-frontend.git
+[submodule "coducate-backend"]
+	path = coducate-backend
+	url = git@github.com:madbeamer/coducate-backend.git
