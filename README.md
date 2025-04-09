@@ -2,14 +2,13 @@
 
 This document explains how to set up and run the Coducate project in both development and production environments.
 
----
-
 ## Development Setup
 
 ### Prerequisites
 
-1. Ensure Docker is installed and running.
-2. Node.js and npm must be installed on your system.
+1.  Node.js (22+)
+2.  npm (11+)
+3.  Docker and Docker Compose
 
 ### Steps
 
@@ -94,8 +93,6 @@ This document explains how to set up and run the Coducate project in both develo
 
     This will stop and remove the MySQL container.
 
----
-
 ### Optional Development Tools
 
 -   **Check the Database**  
@@ -128,8 +125,6 @@ This document explains how to set up and run the Coducate project in both develo
     ```bash
     npx knex seed:run --knexfile knexfile.ts
     ```
-
----
 
 ## Production Setup
 
