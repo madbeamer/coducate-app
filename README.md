@@ -15,15 +15,7 @@ This document explains how to set up and run the Coducate project in both develo
 1.  **Start the Docker Daemon**  
     Ensure Docker is running on your system.
 
-2.  **Set Development Mode**  
-    Navigate to the `coducate` directory and open the `extension.ts` file.  
-    Set the `PRODUCTION` constant to `false`:
-
-    ```typescript
-    const PRODUCTION = false;
-    ```
-
-3.  **Start the Backend Server**  
+2.  **Start the Backend Server**  
     Navigate to the `coducate-backend` directory and run:
 
     ```bash
@@ -32,18 +24,13 @@ This document explains how to set up and run the Coducate project in both develo
 
     This will start the MySQL Docker container.
 
-    After running this command:
+    Then run:
 
-    -   **Check if the `data/mysql` directory exists in `coducate-backend`**:
+    ```bash
+    npx knex migrate:latest --knexfile knexfile.ts
+    ```
 
-        -   If the `data/mysql` directory already exists, skip the next step.
-        -   If it does not exist, manually run the following command to apply the database migrations:
-
-            ```bash
-            npx knex migrate:latest --knexfile knexfile.ts
-            ```
-
-    This will create the `coducate` database and the `rooms` table.
+    This will run the database migrations.
 
     ```bash
     npm start
@@ -53,7 +40,7 @@ This document explains how to set up and run the Coducate project in both develo
 
     The backend server and MySQL Docker container will then be ready to use.
 
-4.  **Start the Frontend Server**  
+3.  **Start the Frontend Server**  
     Navigate to the `coducate-frontend` directory and run:
 
     ```bash
@@ -62,11 +49,11 @@ This document explains how to set up and run the Coducate project in both develo
 
     This starts the Vite development server.
 
-5.  **Start extension development host**  
+4.  **Start extension development host**  
     Open the Coducate project in Visual Studio Code.  
     Press `F5` to start the extension development host.
 
-6.  **Test the Extension by installing it using the `.vsix` file**
+5.  **Test the Extension by installing it using the `.vsix` file**
     Navigate to the `coducate` directory and run:
 
     ```bash
@@ -82,7 +69,7 @@ This document explains how to set up and run the Coducate project in both develo
     -   Choose the `.vsix` file created earlier
     -   Reload Visual Studio Code
 
-7.  **End the Development Session**  
+6.  **End the Development Session**  
     To stop the backend server, press `Ctrl + C` in the terminal.  
     To stop the frontend server, press `Ctrl + C` in the terminal.
     To stop the MySQL Docker container, navigate to the `coducate-backend` and run:
@@ -112,14 +99,6 @@ This document explains how to set up and run the Coducate project in both develo
     SELECT * FROM rooms;
     ```
 
--   **Reset the Rooms Table**  
-    Navigate to the `coducate-backend` directory and execute:
-
-    ```bash
-    npx knex migrate:down --knexfile knexfile.ts
-    npx knex migrate:latest --knexfile knexfile.ts
-    ```
-
 -   **Populate the Rooms Table**  
     Modify the `seed_rooms.ts` file as needed, then run:
     ```bash
@@ -136,19 +115,14 @@ This document explains how to set up and run the Coducate project in both develo
     ```
 
 3. Access the web server using SSH.
-4. Navigate to the deployment directory:
+
+4. Run the deployment script:
 
     ```bash
-    cd /opt/containers/coducate/
+    ./coducate/deploy.sh
     ```
 
-5. Run the deployment script:
-
-    ```bash
-    ./deploy.sh
-    ```
-
-6. Publish the extension to the Visual Studio Code Marketplace:
+5. Publish the extension to the Visual Studio Code Marketplace:
 
     First, update the `CHANGELOG.md` file with the new version and changes.
     Make the necessary changes to the `README.md` file as well.
