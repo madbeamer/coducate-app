@@ -1,2 +1,6 @@
+# Mounted data from MariaDB container so data survives restart
+data/
+
+# Other directories
 web-server-files/
-coducate-test-directories
+coducate-test-directories/

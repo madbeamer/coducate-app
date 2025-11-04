@@ -1,0 +1,64 @@
+services:
+  mariadb:
+    image: mariadb:11.8
+    container_name: coducate-mariadb-dev
+    restart: unless-stopped
+    env_file:
+      - ./coducate-backend/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    networks:
+      - coducate-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./coducate-backend
+      dockerfile: Dockerfile.dev
+    container_name: coducate-backend-dev
+    restart: unless-stopped
+    ports:
+      - "1234:1234"
+    env_file:
+      - ./coducate-backend/.env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./coducate-backend:/usr/src/coducate-backend
+      - /usr/src/coducate-backend/node_modules
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - coducate-network
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./coducate-frontend
+      dockerfile: Dockerfile.dev
+    container_name: coducate-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./coducate-frontend:/usr/src/coducate-frontend
+      - /usr/src/coducate-frontend/node_modules
+    depends_on:
+      - backend
+    networks:
+      - coducate-network
+    environment:
+      - VITE_API_URL=http://localhost:1234
+
+networks:
+  coducate-network:
+    driver: bridge
+    

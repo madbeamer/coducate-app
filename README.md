@@ -6,54 +6,54 @@ This document explains how to set up and run the Coducate project in both develo
 
 ### Prerequisites
 
-1.  Node.js (22+)
-2.  npm (11+)
-3.  Docker and Docker Compose
+1.  Docker and Docker Compose
 
 ### Steps
 
 1.  **Start the Docker Daemon**  
     Ensure Docker is running on your system.
 
-2.  **Start the Backend Server**  
-    Navigate to the `coducate-backend` directory and run:
+2.  **Configure Environment Variables**  
+    Navigate to the `coducate-backend` directory and ensure the `.env` file exists with proper database credentials.
 
+3.  **Start All Services**  
+    From the project root directory, run:
+    
     ```bash
-     docker compose up -d mysql
+    docker compose up -d
     ```
 
-    This will start the MySQL Docker container.
+    This will start MariaDB, backend, and frontend containers. Database migrations will run automatically.
 
-    Then run:
+4.  **Access the Application**  
+    - Frontend (with HMR): http://localhost:5173
+    - Backend API: http://localhost:1234
+    - Database: localhost:3306
 
+5.  **Develop with Hot Reload**  
+    - Backend: Edit files in `coducate-backend/src/` - nodemon will auto-restart
+    - Frontend: Edit files in `coducate-frontend/src/` - Vite HMR will instantly update the browser
+
+6.  **View Logs**  
+    To see logs from all services:
+    
     ```bash
-    npx knex migrate:latest --knexfile knexfile.ts
+    docker compose logs -f
     ```
 
-    This will run the database migrations.
-
+    To see logs from a specific service:
+    
     ```bash
-    npm start
+    docker compose logs -f backend
+    docker compose logs -f frontend
+    docker compose logs -f mariadb
     ```
 
-    This will start the backend server.
-
-    The backend server and MySQL Docker container will then be ready to use.
-
-3.  **Start the Frontend Server**  
-    Navigate to the `coducate-frontend` directory and run:
-
-    ```bash
-    npm run dev
-    ```
-
-    This starts the Vite development server.
-
-4.  **Start extension development host**  
+7.  **Start extension development host**  
     Open the Coducate project in Visual Studio Code.  
     Press `F5` to start the extension development host.
 
-5.  **Test the Extension by installing it using the `.vsix` file**
+8.  **Test the Extension on non-development host by installing it using the `.vsix` file**  
     Navigate to the `coducate` directory and run:
 
     ```bash
@@ -69,22 +69,37 @@ This document explains how to set up and run the Coducate project in both develo
     -   Choose the `.vsix` file created earlier
     -   Reload Visual Studio Code
 
-6.  **End the Development Session**  
-    To stop the backend server, press `Ctrl + C` in the terminal.  
-    To stop the frontend server, press `Ctrl + C` in the terminal.
-    To stop the MySQL Docker container, navigate to the `coducate-backend` and run:
-
+9.  **End the Development Session**  
+    To stop all services:
+    
     ```bash
-    docker-compose down
+    docker compose down
     ```
 
-    This will stop and remove the MySQL container.
+### Development Tools
 
-### Optional Development Tools
+-   **Rebuild Containers** (after Dockerfile or dependency changes)  
+    
+    ```bash
+    docker compose up -d --build
+    ```
+
+-   **Restart a specific service**  
+    
+    ```bash
+    docker compose restart backend
+    docker compose restart frontend
+    ```
 
 -   **Check the Database**  
-    Connect to the MySQL database:
+    Connect to the MariaDB database from inside the container:
+    
+    ```bash
+    docker compose exec mariadb mysql -u root -p
+    ```
 
+    Or from your host machine (requires mysql client):
+    
     ```bash
     mysql -h 127.0.0.1 -P 3306 -u root -p
     ```
@@ -92,36 +107,80 @@ This document explains how to set up and run the Coducate project in both develo
     Enter the root password from the `.env` file.
 
 -   **Query the Rooms Table**  
-    Inside the MySQL prompt, run:
+    Inside the MariaDB prompt, run:
 
     ```sql
     USE coducate;
     SELECT * FROM rooms;
     ```
 
+-   **Run Migrations Manually** (if needed)  
+    Migrations run automatically on startup, but you can run them manually:
+    
+    ```bash
+    docker compose exec backend npx knex migrate:latest --knexfile knexfile.ts
+    ```
+
+-   **Rollback Migrations**  
+    
+    ```bash
+    docker compose exec backend npx knex migrate:rollback --knexfile knexfile.ts
+    ```
+
+-   **Create New Migration**  
+    
+    ```bash
+    docker compose exec backend npx knex migrate:make migration_name --knexfile knexfile.ts
+    ```
+
 -   **Populate the Rooms Table**  
     Modify the `seed_rooms.ts` file as needed, then run:
+    
     ```bash
-    npx knex seed:run --knexfile knexfile.ts
+    docker compose exec backend npx knex seed:run --knexfile knexfile.ts
+    ```
+
+-   **Access Container Shell**  
+    
+    ```bash
+    docker compose exec backend sh
+    docker compose exec frontend sh
+    docker compose exec mariadb sh
+    ```
+
+-   **Install new npm package**  
+    Backend:
+    
+    ```bash
+    docker compose exec backend npm install <package-name>
+    docker compose restart backend
+    ```
+    
+    Frontend:
+    
+    ```bash
+    docker compose exec frontend npm install <package-name>
+    docker compose restart frontend
     ```
 
 ## Production Setup
 
 1. Go to the project's root directory (where this `README.md` is located).
-2. Run the following command:
 
+2. Run the following command to build and push images to AWS ECR:
+    
     ```bash
     ./build_and_push.sh
     ```
 
-3. Access the web server using SSH.
-
+3. Access the web server using SSH:
+    
     ```bash
     ssh -i ~/.ssh/coducate-ec2.pem ubuntu@18.184.166.137
     ```
 
 4. Run the deployment script:
-
+    
     ```bash
     ./coducate/deploy.sh
     ```
@@ -134,13 +193,13 @@ This document explains how to set up and run the Coducate project in both develo
     Then, commit the changes and push them to the repository.
 
     Make sure you have the `vsce` tool installed. If not, install it using:
-
+    
     ```bash
-     npm install -g vsce
+    npm install -g vsce
     ```
 
     Then login using:
-
+    
     ```bash
     vsce login coducate
     ```
@@ -148,9 +207,13 @@ This document explains how to set up and run the Coducate project in both develo
     Enter the Personal Access Token when prompted.
 
     Then run the following command to publish the extension:
-
+    
     ```bash
     vsce publish <version> --allow-missing-repository
     ```
 
     This will automatically update the version in the `package.json` and `package-lock.json` file.
+
+## License
+
+TBD
