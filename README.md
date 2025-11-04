@@ -116,6 +116,10 @@ This document explains how to set up and run the Coducate project in both develo
 
 3. Access the web server using SSH.
 
+    ```bash
+    ssh -i ~/.ssh/coducate-ec2.pem ubuntu@18.184.166.137
+    ```
+
 4. Run the deployment script:
 
     ```bash
