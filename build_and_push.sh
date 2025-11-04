@@ -12,6 +12,15 @@ echo ""
 echo "Logging into ECR..."
 aws ecr get-login-password --region "eu-central-1" | docker login --username AWS --password-stdin ${ECR_REGISTRY}
 
+# Ensure buildx builder exists and is using docker-container driver
+echo ""
+echo "Setting up buildx builder..."
+if ! docker buildx inspect ecr-builder > /dev/null 2>&1; then
+    docker buildx create --name ecr-builder --driver docker-container --use
+else
+    docker buildx use ecr-builder
+fi
+
 # Backend
 echo ""
 echo "Building and pushing backend..."
@@ -27,6 +36,7 @@ docker buildx build \
     --tag ${ECR_REGISTRY}/coducate/coducate-backend:latest \
     --tag ${ECR_REGISTRY}/coducate/coducate-backend:${BACKEND_VERSION} \
     --push \
+    --output type=registry \
     ./coducate-backend
 
 # Frontend
@@ -44,6 +54,7 @@ docker buildx build \
     --tag ${ECR_REGISTRY}/coducate/coducate-frontend:latest \
     --tag ${ECR_REGISTRY}/coducate/coducate-frontend:${FRONTEND_VERSION} \
     --push \
+    --output type=registry \
     ./coducate-frontend
 
 echo ""
