@@ -204,7 +204,9 @@ This document explains how to set up and run the Coducate project in both develo
     vsce login coducate
     ```
 
-    Enter the Personal Access Token when prompted.
+    If the output is `Publisher 'coducate' is already known. Do you want to overwrite its PAT? [y/N]`, enter `n` to keep the existing Personal Access Token (PAT) and skip the next step.
+
+    Enter the Personal Access Token (PAT) when prompted. You can create a new PAT from the Visual Studio Marketplace.
 
     Then run the following command to publish the extension:
     
