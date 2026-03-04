@@ -208,7 +208,7 @@ This document explains how to set up and run the Coducate project in both develo
 
     Enter the Personal Access Token (PAT) when prompted. You can create a new PAT from the Visual Studio Marketplace.
 
-    Then run the following command to publish the extension:
+    Go to the `coducate` directory and run the following command to publish the extension:
     
     ```bash
     vsce publish <version> --allow-missing-repository
