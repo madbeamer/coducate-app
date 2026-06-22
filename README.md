@@ -57,7 +57,7 @@ This document explains how to set up and run the Coducate project in both develo
     Navigate to the `coducate` directory and run:
 
     ```bash
-    vsce package --allow-missing-repository
+    vsce package
     ```
 
     This will create a `.vsix` file in the `coducate` directory.  
@@ -211,7 +211,7 @@ This document explains how to set up and run the Coducate project in both develo
     Go to the `coducate` directory and run the following command to publish the extension:
     
     ```bash
-    vsce publish <version> --allow-missing-repository
+    vsce publish <version>
     ```
 
     This will automatically update the version in the `package.json` and `package-lock.json` file.
