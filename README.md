@@ -182,7 +182,8 @@ This document explains how to set up and run the Coducate project in both develo
 4. Run the deployment script:
     
     ```bash
-    ./coducate/deploy.sh
+    cd coducate
+    ./deploy.sh
     ```
 
 5. Publish the extension to the Visual Studio Code Marketplace:
