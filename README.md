@@ -1,3 +1,9 @@
+> **Archived — moved to ETH Zurich's PEACH Lab.**
+>
+> This is the original Coducate repository, created by [Lukas Mast](https://github.com/madbeamer). The project has been handed over to the [PEACH Lab](https://peachlab.inf.ethz.ch/) at ETH Zurich, where it is now maintained, further developed, and used as a platform for teaching and research.
+>
+> Active development continues at **[ETH-PEACH-Lab/coducate-app](https://github.com/ETH-PEACH-Lab/coducate-app)**.
+
 # Coducate Development and Production Setup Guide
 
 This document explains how to set up and run the Coducate project in both development and production environments.
