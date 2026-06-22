@@ -218,4 +218,4 @@ This document explains how to set up and run the Coducate project in both develo
 
 ## License
 
-TBD
+[GNU Affero General Public License v3.0 or later](LICENSE)
